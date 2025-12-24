@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Admission Enquiry System</title>
+
+<style>
+body { margin:0; font-family:Arial; background:#f4f4f4; }
+
+header { background:linear-gradient(to right,#1e3c72,#2a5298); color:white; padding:20px; text-align:center; }
+nav { background:#111; padding:12px; text-align:center; }
+nav a { color:white; margin:0 15px; text-decoration:none; font-weight:bold; }
+nav a:hover { color:#2a5298; }
+
+.hero {
+  height:250px; display:flex; align-items:center; justify-content:center;
+  background:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b') no-repeat center/cover;
+  color:white; font-size:30px; font-weight:bold; text-shadow:2px 2px 5px black;
+}
+
+.container {
+  max-width:900px; margin:auto; background:white;
+  padding:20px; margin-top:20px; box-shadow:0 0 10px #999;
+}
+
+footer { background:#1e3c72; color:white; text-align:center; padding:15px; margin-top:20px; }
+
+/* LOGIN */
+.login-section {
+  height:100vh; display:flex; justify-content:center; align-items:center; background:#eef2f3;
+}
+.login-box {
+  width:300px; padding:20px; background:white; box-shadow:0 0 10px #aaa; border-radius:10px;
+}
+.login-box input, .login-box button {
+  width:100%; padding:10px; margin:10px 0;
+}
+.login-box button {
+  background:#1e3c72; color:white; border:none; border-radius:5px;
+}
+
+/* FORM */
+.enquiry-form { display:flex; flex-direction:column; gap:10px; }
+.enquiry-form input, select, textarea {
+  padding:10px; border:1px solid #aaa; border-radius:5px;
+}
+.enquiry-form button {
+  background:#2a5298; color:white; padding:12px;
+  border:none; border-radius:6px; cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<section id="loginPage" class="login-section">
+  <div class="login-box">
+    <h2 style="text-align:center;">Admin Login</h2>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+</section>
+
+<!-- HOME PAGE -->
+<section id="homePage" style="display:none;">
+
+<header>
+  <h1>Bharati Vidyapeeth College Admission Enquiry System</h1>
+  <p>Academic Year 2025-2026</p>
+</header>
+
+<nav>
+  <a href="#">Home</a>
+  <a href="#enquiry">Enquiry Form</a>
+  <a href="#contact">Contact</a>
+  <a href="#" onclick="viewEnquiries()">View Enquiries</a>
+  <a href="#" onclick="logout()">Logout</a>
+</nav>
+
+<div class="hero">Admission Enquiry Portal</div>
+
+<!-- ENQUIRY FORM -->
+<div class="container" id="enquiry">
+<h2>Admission Enquiry Form</h2>
+
+<form class="enquiry-form" onsubmit="submitForm(event)">
+<input id="name" placeholder="Full Name" required>
+<input id="phone" placeholder="Contact Number" required>
+<input type="email" id="email" placeholder="Email Address" required>
+
+<input type="date" id="dob" required>
+
+<select id="gender" required>
+  <option value="">-- Gender --</option>
+  <option>Male</option>
+  <option>Female</option>
+  <option>Other</option>
+</select>
+
+<select id="course" required>
+  <option value="">-- Select Course --</option>
+  <option>BCA</option>
+  <option>B.Sc IT</option>
+  <option>MCA</option>
+  <option>B.Tech</option>
+  <option>Diploma CS</option>
+</select>
+
+<input id="fees" placeholder="Course Fees" readonly>
+
+<input id="parent" placeholder="Parent / Guardian Name" required>
+<input id="address" placeholder="Address" required>
+<input id="qualification" placeholder="Previous Qualification" required>
+<input id="nationality" placeholder="Nationality" required>
+
+<select id="mode" required>
+  <option value="">-- Mode of Study --</option>
+  <option>Regular</option>
+  <option>Part Time</option>
+  <option>Online</option>
+</select>
+
+<select id="hostel" required>
+  <option value="">-- Hostel Required --</option>
+  <option>Yes</option>
+  <option>No</option>
+</select>
+
+<textarea id="msg" rows="4" placeholder="Your Message"></textarea>
+
+<button type="submit">Submit Enquiry</button>
+</form>
+</div>
+
+<!-- CONTACT -->
+<div class="container" id="contact">
+<h2>Contact Us</h2>
+<p>Email: cdoe.support@bharatividyapeeth.edu</p>
+<p>Phone: +91  07969470011</p>
+</div>
+
+<footer>© 2025-2026 Bharati Vidyapeeth College Admission Enquiry System</footer>
+
+</section>
+
+<script>
+/* LOGIN */
+function login() {
+  let u = loginUser.value;
+  let p = loginPass.value;
+  if(u === "admin" && p === "admin123") {
+    loginPage.style.display = "none";
+    homePage.style.display = "block";
+  } else {
+    alert("Invalid Login! Use admin / admin123");
+  }
+}
+
+/* LOGOUT */
+function logout() {
+  homePage.style.display = "none";
+  loginPage.style.display = "flex";
+}
+
+/* COURSE FEES */
+course.addEventListener("change", function() {
+  let feesMap = {
+    "BCA":"?60,000",
+    "B.Sc IT":"?55,000",
+    "MCA":"?80,000",
+    "B.Tech":"?1,20,000",
+    "Diploma CS":"?40,000"
+  };
+  fees.value = feesMap[this.value] || "";
+});
+
+/* SUBMIT FORM */
+function submitForm(e) {
+  e.preventDefault();
+
+  let enquiry = {
+    name: name.value,
+    phone: phone.value,
+    course: course.value,
+    email: email.value
+  };
+
+  let data = JSON.parse(localStorage.getItem("enquiries")) || [];
+  data.push(enquiry);
+  localStorage.setItem("enquiries", JSON.stringify(data));
+
+  alert("Enquiry Submitted Successfully!");
+  e.target.reset();
+}
+
+/* VIEW ENQUIRIES */
+function viewEnquiries() {
+  let data = JSON.parse(localStorage.getItem("enquiries")) || [];
+  if(data.length === 0) {
+    alert("No enquiries found.");
+    return;
+  }
+  let msg = "ENQUIRIES LIST:\n\n";
+  data.forEach((e,i) => {
+    msg += (i+1)+". "+e.name+" - "+e.course+"\n";
+  });
+  alert(msg);
+}
+</script>
+
+</body>
+</html>
